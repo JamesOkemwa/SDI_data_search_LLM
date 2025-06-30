@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Config:
     """Configuration for the query parser."""
-    model_name: str = "gpt-4o"
+    model_name: str = "gpt-3.5-turbo"
     temperature: float = 0.0
 
 
@@ -41,9 +41,9 @@ class QueryParser:
     SYSTEM_PROMPT = "You are a geospatial query specialist"
     USER_PROMPT = """
     Your task is to extract from this dataset search query:
-        1. raw_theme: Core search theme (exact user wording)
-        2. locations: Place names for geocoding
-        3. themes: Main themes and keywords relevant to the query
+        1. raw_theme: Raw theme or core search theme (exact user wording)
+        2. locations: Place names for that will be used later for geocoding. A location can be a town, city, country or region which can be geocoded using a geocoding API.
+        3. themes: Main themes, keywords and topics that are relevant to the query. Where possible, add two themes that match the user query
         4. publishers: Organizations or data publishers mentioned
     Format your response as a JSON that matches this pydantic schema:
     {format_instructions}
@@ -83,3 +83,31 @@ class QueryParser:
         except Exception as e:
             logger.error(f"Failed to parse query: {e}")
             raise
+
+def parse_query(query: str, config: Optional[Config] = None) -> QueryIntent:
+    """Convenience function to parse a query using the default configuration."""
+    parser = QueryParser(config)
+    return parser.parse(query)
+
+
+if __name__ == "__main__":
+    load_dotenv()
+
+    test_queries = [
+        "I am looking for datasets about cycling paths in Muenster, Germany.",
+        "What data is available on air quality from the European Environmental Agency?",
+        "Where can I find information about agricultural areas for 2025 in Bavaria?"
+    ]
+
+    # parser = QueryParser()
+
+    for query in test_queries:
+        try:
+            result = parse_query(query)
+            print(f"\nQuery: {query}")
+            print(f"Theme: {result.raw_theme}")
+            print(f"Locations: {result.locations}")
+            print(f"Themes: {result.themes}")
+            print(f"Publishers: {result.publishers}")
+        except Exception as e:
+            pass
