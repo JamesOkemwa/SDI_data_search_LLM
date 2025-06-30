@@ -33,4 +33,13 @@ class Dataset:
 
         return "\n".join(content_parts)
 
+    def to_metadata(self) -> dict:
+        """
+        Returns the dataset's metadata as a dictionary. This is useful for filtering and searching.
+        """
+        return {
+            "title": self.primary_title,
+            "keywords": self.keywords
+        }
+
         
