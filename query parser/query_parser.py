@@ -68,3 +68,18 @@ class QueryParser:
         )
 
         self.chain = self.prompt | self.model | self.parser
+
+    def parse(self, query:str) -> QueryIntent:
+        """Parse a natural language query into a structured intent."""
+
+        if not query or not query.strip():
+            raise ValueError("Query cannot be empty")
+        
+        try:
+            logger.info("Parsing query: {query}")
+            result = self.chain.invoke({"query": query, "format_instructions": self.parser.get_format_instructions()})
+            logger.info("Successfully parsed: {result.raw_theme}")
+            return result
+        except Exception as e:
+            logger.error(f"Failed to parse query: {e}")
+            raise
