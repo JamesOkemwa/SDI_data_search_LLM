@@ -16,7 +16,7 @@ class Dataset:
         DCAT Datasets may contain multiple titles in different languages. 
         Returns the first title or None if no titles exist.
         """
-        return self.titles[0] if self.title else None
+        return self.titles[0] if self.titles else None
     
     def to_content(self) -> str:
         """

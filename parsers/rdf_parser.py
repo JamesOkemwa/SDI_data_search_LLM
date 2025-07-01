@@ -1,6 +1,6 @@
 from typing import List
 from rdflib import Graph, Namespace, RDF
-from ..models.dataset import Dataset
+from models.dataset import Dataset
 
 
 class RDFParser:
