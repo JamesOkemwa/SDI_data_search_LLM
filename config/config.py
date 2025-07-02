@@ -13,5 +13,3 @@ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 RDF_FILE_PATH = DATA_DIR / "gdi_de_catalog.rdf"
-
-print(QDRANT_HOST, QDRANT_PORT, COLLECTION_NAME, EMBEDDING_MODEL)
