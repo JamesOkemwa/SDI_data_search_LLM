@@ -1,5 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional
+from datetime import datetime
 
 @dataclass
 class Dataset:
@@ -9,6 +10,7 @@ class Dataset:
     keywords: List[str]
     access_urls: List[str]
     download_urls: List[str]
+    dataset_id: Optional[str] = None
 
     @property
     def primary_title(self) -> Optional[str]:
@@ -39,7 +41,10 @@ class Dataset:
         """
         return {
             "title": self.primary_title,
-            "keywords": self.keywords
+            "dataset_id": self.dataset_id,
+            "keywords": self.keywords,
+            "access_urls": self.access_urls,
+            "download_urls": self.download_urls,
         }
 
         
