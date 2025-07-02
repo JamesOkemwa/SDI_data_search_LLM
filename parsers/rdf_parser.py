@@ -9,6 +9,7 @@ class RDFParser:
     def __init__(self):
         self.dcat = Namespace("http://www.w3.org/ns/dcat#")
         self.dct = Namespace("http://purl.org/dc/terms/")
+        self.foaf = Namespace("http://xmlns.com/foaf/0.1/")
 
     def parse_file(self, file_path: str) -> List[Dataset]:
         """
@@ -50,14 +51,18 @@ class RDFParser:
         titles = [str(title) for title in graph.objects(dataset_uri, self.dct.title)]
         descriptions = [str(description) for description in graph.objects(dataset_uri, self.dct.description)]
         keywords = [str(keyword) for keyword in graph.objects(dataset_uri, self.dcat.keyword)]
+        dataset_id = [(str(id) if id else None) for id in graph.objects(dataset_uri, self.dct.identifier)][0]
+
         access_urls, download_urls = self._extract_distribution_urls(graph, dataset_uri)
+
 
         return Dataset(
             titles=titles,
             descriptions=descriptions,
             keywords=keywords,
             access_urls=access_urls,
-            download_urls=download_urls
+            download_urls=download_urls,
+            dataset_id=dataset_id
         )
     
     def _extract_distribution_urls(self, graph: Graph, dataset_uri) -> tuple[List[str], List[str]]:
