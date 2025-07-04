@@ -8,6 +8,8 @@ from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field, validator
 from dotenv import load_dotenv
 
+load_dotenv()
+
 # configure basic logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,8 +17,8 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Config:
     """Configuration for the query parser."""
-    model_name: str = "gpt-3.5-turbo"
-    temperature: float = 0.0
+    model_name: str = "gpt-4o-mini"
+    temperature: float = 0.5
 
 
 class QueryIntent(BaseModel):
@@ -88,26 +90,3 @@ def parse_query(query: str, config: Optional[Config] = None) -> QueryIntent:
     """Convenience function to parse a query using the default configuration."""
     parser = QueryParser(config)
     return parser.parse(query)
-
-
-if __name__ == "__main__":
-    load_dotenv()
-
-    test_queries = [
-        "I am looking for datasets about cycling paths in Muenster, Germany.",
-        "What data is available on air quality from the European Environmental Agency?",
-        "Where can I find information about agricultural areas for 2025 in Bavaria?"
-    ]
-
-    # parser = QueryParser()
-
-    for query in test_queries:
-        try:
-            result = parse_query(query)
-            print(f"\nQuery: {query}")
-            print(f"Theme: {result.raw_theme}")
-            print(f"Locations: {result.locations}")
-            print(f"Themes: {result.themes}")
-            print(f"Publishers: {result.publishers}")
-        except Exception as e:
-            pass
