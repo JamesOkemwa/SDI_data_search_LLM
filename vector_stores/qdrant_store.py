@@ -3,13 +3,15 @@ from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient, models
 from langchain.schema import Document
 from langchain_openai import OpenAIEmbeddings
+from dotenv import load_dotenv
 from models.dataset import Dataset
 
+load_dotenv()
 
 class QdrantVectorStoreManager:
     """Manages Qdrant vector store operations."""
 
-    def __init__(self, host: str = "localhost", port: int = 6333, collection_name: str = "dcat_colllection"):
+    def __init__(self, host: str = "localhost", port: int = 6333, collection_name: str = "dcat_collection"):
         self.host = host
         self.port = port
         self.collection_name = collection_name
