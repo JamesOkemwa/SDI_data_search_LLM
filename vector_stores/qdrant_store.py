@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional, Dict, Any
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from langchain.schema import Document
@@ -39,6 +39,18 @@ class QdrantVectorStoreManager:
         
         documents = self._datasets_to_documents(datasets)
         self.vector_store.add_documents(documents)
+
+    def similarity_search(self, query: str, k:int = 3, filter_criteria: Optional[Dict[str, Any]] = None) -> List[Document]:
+        """
+        Perform a similarity searc on the vector store.
+        """
+
+        if not self.vector_store:
+            raise ValueError("Vector store is not initialized")
+        
+        if filter_criteria:
+            return self.vector_store.similarity_search(query, k=k, filter=filter_criteria)
+        return self.vector_store.similarity_search(query, k=k)
 
     def _ensure_collection_exists(self) -> None:
         """
