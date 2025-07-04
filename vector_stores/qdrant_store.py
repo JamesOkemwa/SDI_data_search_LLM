@@ -1,6 +1,6 @@
 from typing import List, Optional, Dict, Any
 from langchain_qdrant import QdrantVectorStore
-from qdrant_client import QdrantClient
+from qdrant_client import QdrantClient, models
 from langchain.schema import Document
 from langchain_openai import OpenAIEmbeddings
 from models.dataset import Dataset
@@ -40,9 +40,14 @@ class QdrantVectorStoreManager:
         documents = self._datasets_to_documents(datasets)
         self.vector_store.add_documents(documents)
 
-    def similarity_search(self, query: str, k:int = 3, filter_criteria: Optional[Dict[str, Any]] = None) -> List[Document]:
+    def similarity_search(self, query: str, k:int = 3, filter_criteria: Optional[models.Filter] = None) -> List[Document]:
         """
-        Perform a similarity searc on the vector store.
+        Perform a similarity search on the vector store.
+
+        Args:
+            query: The search query string
+            k: Number of results to return
+            filter_criteria: Optional Qdrant Filter object to filter results
         """
 
         if not self.vector_store:
