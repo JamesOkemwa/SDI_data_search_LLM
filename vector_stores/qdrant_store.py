@@ -57,6 +57,19 @@ class QdrantVectorStoreManager:
             return self.vector_store.similarity_search(query, k=k, filter=filter_criteria)
         return self.vector_store.similarity_search(query, k=k)
 
+    def similarity_search_with_score(self,  query: str, k: int = 3, filter_criteria: Optional[models.Filter] = None) -> List[tuple[Document, float]]:
+        """
+        Perform a similarity search with relevance scores.
+        Returns a list of tuples containing (Document, score).
+        """
+        
+        if not self.vector_store:
+            raise ValueError("Vector store is not initialized")
+        
+        if filter_criteria:
+            return self.vector_store.similarity_search_with_score(query, k=k, filter=filter_criteria)
+        return self.vector_store.similarity_search_with_score(query, k=k)
+
     def _ensure_collection_exists(self) -> None:
         """
         Create a Qdrant collection if it does not exist.
