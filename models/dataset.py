@@ -4,6 +4,7 @@ from typing import List, Optional
 @dataclass
 class Dataset:
     """Represents a DCAT dataset with its metadata."""
+    dataset_id: str
     titles: List[str]
     descriptions: List[str]
     keywords: List[str]
@@ -38,6 +39,7 @@ class Dataset:
         Returns the dataset's metadata as a dictionary. This is useful for filtering and searching.
         """
         return {
+            "dataset_id": self.dataset_id,
             "title": self.primary_title,
             "keywords": self.keywords
         }
