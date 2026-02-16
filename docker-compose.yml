@@ -2,7 +2,7 @@ services:
   postgis:
     image: postgis/postgis:16-3.4-alpine
     container_name: postgis
-    restart: always
+    restart: unless-stopped
     ports:
       - "${POSTGRES_PORT}:5432"
     environment:
@@ -17,7 +17,7 @@ services:
   qdrant:
     image: qdrant/qdrant:latest
     container_name: qdrant
-    restart: always
+    restart: unless-stopped
     ports:
       - "${QDRANT_PORT}:6333"
     volumes:
