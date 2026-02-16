@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Optional
+from typing import Optional, Dict
 from dataclasses import dataclass, asdict
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
@@ -30,7 +30,7 @@ class BoundingBox:
 class GeocodingService:
     """Service for geocoding locations and retrieving bounding boxes"""
     
-    def __init__(self, user_agent: str = "spatial_data_search_app", timeout: int = 3):
+    def __init__(self, user_agent: str = "sdi_data_search_app/1.0 (contact: spatialdatasearch@email.com)", timeout: int = 3):
         """Initialize the geocoding service with a user agent and timeout"""
         self.geocoder = Nominatim(user_agent=user_agent, timeout=timeout)
         self.logger = logging.getLogger(__name__)
