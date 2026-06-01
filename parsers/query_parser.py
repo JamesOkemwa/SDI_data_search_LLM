@@ -7,19 +7,13 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field, validator
 from dotenv import load_dotenv
+from config.llm_config import LLMConfig
 
 load_dotenv()
 
 # configure basic logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-@dataclass
-class Config:
-    """Configuration for the query parser."""
-    model_name: str = "gpt-4o-mini"
-    temperature: float = 0.5
-
 
 class QueryIntent(BaseModel):
     """Structured representation of a geospatial query intent."""
@@ -82,13 +76,9 @@ class QueryParser:
     Query: {query}
     """
 
-    def __init__(self, config: Optional[Config] = None):
+    def __init__(self):
         """Initialize the parser."""
-        self.config = config or Config()
-        self.model = ChatOpenAI(
-            model_name=self.config.model_name,
-            temperature=self.config.temperature
-        )
+        self.model = LLMConfig.create_llm()
         self.parser = PydanticOutputParser(pydantic_object=QueryIntent)
 
         self.prompt = ChatPromptTemplate.from_messages(
@@ -114,8 +104,3 @@ class QueryParser:
         except Exception as e:
             logger.error(f"Failed to parse query: {e}")
             raise
-
-def parse_query(query: str, config: Optional[Config] = None) -> QueryIntent:
-    """Convenience function to parse a query using the default configuration."""
-    parser = QueryParser(config)
-    return parser.parse(query)
