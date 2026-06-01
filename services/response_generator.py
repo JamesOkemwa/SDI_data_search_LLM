@@ -3,6 +3,7 @@ from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema.output_parser import StrOutputParser
 from services.retrieval_service import SearchResult
+from config.llm_config import LLMConfig
 import logging
 
 
@@ -10,7 +11,7 @@ class ResponseGenerator:
     """Generates natural language responses using Langchain based on retrieved datasets."""
 
     def __init__(self):
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
+        self.llm = LLMConfig.create_llm()
         self.logger = logging.getLogger(__name__)
 
         # response generation prompt
