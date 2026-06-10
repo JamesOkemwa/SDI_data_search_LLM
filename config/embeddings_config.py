@@ -13,7 +13,7 @@ class EmbeddingsConfig:
     @staticmethod
     def get_provider() -> EmbeddingProvider:
         """Get the configured embedding provider"""
-        provider = os.getenv("EMBEDDING_PROVIDER", "local").lower()
+        provider = os.getenv("EMBEDDINGS_PROVIDER", "local").lower()
         if provider not in ("local", "openai"):
             raise ValueError(f"Invalid EMBEDDINGS_PROVIDER: {provider}. Must be 'local' or 'openai'")
         return provider
@@ -24,11 +24,13 @@ class EmbeddingsConfig:
         provider = EmbeddingsConfig.get_provider()
         
         if provider == 'openai':
+            print('openai model****')
             return OpenAIEmbeddings(
                 model=os.getenv("OPENAI_EMBEDDINGS_MODEL", "text-embedding-3-large"),
                 api_key=os.getenv('OPENAI_API_KEY')
             )
         else:
+            print("Running the local embedding***")
             return OpenAIEmbeddings(
                 model=os.getenv("LOCAL_EMBEDDINGS_MODEL", "Qwen3-Embedding-4B"),
                 base_url=os.getenv("LOCAL_EMBEDDINGS_BASE_URL", "http://localhost:8081/v1"),
