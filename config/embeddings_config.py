@@ -24,13 +24,11 @@ class EmbeddingsConfig:
         provider = EmbeddingsConfig.get_provider()
         
         if provider == 'openai':
-            print('openai model****')
             return OpenAIEmbeddings(
                 model=os.getenv("OPENAI_EMBEDDINGS_MODEL", "text-embedding-3-large"),
                 api_key=os.getenv('OPENAI_API_KEY')
             )
         else:
-            print("Running the local embedding***")
             return OpenAIEmbeddings(
                 model=os.getenv("LOCAL_EMBEDDINGS_MODEL", "Qwen3-Embedding-4B"),
                 base_url=os.getenv("LOCAL_EMBEDDINGS_BASE_URL", "http://localhost:8081/v1"),
