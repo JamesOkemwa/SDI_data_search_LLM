@@ -12,6 +12,7 @@ dependencies = [
     "langchain>=0.3.26",
     "langchain-openai>=0.3.27",
     "langchain-qdrant>=0.2.0",
+    "openai>=1.93.0",
     "psycopg2-binary>=2.9.10",
     "pydantic>=2.11.7",
     "qdrant-client>=1.14.3",

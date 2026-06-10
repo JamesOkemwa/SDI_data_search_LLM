@@ -16,6 +16,7 @@ CATALOGUE_ID = "nipp"
 LANGUAGE = "hr"
 LIMIT = 100
 START_INDEX = 0
+QDRANT_BATCH_SIZE = 100
 
 # API endpoints
 EDP_SEARCH_API = "https://data.europa.eu/api/hub/search/datasets"
@@ -195,24 +196,33 @@ def index_datasets_in_postgis(datasets: List[Dataset]) -> bool:
         logger.error(f"Error indexing in PostGIS: {e}")
         return False
     
-def index_datasets_in_qdrant(datasets: List[Dataset]) -> bool:
+def index_datasets_in_qdrant(datasets: List[Dataset], batch_size: int = 10) -> bool:
     """Index datasets in Qdrant vector store."""
-    logger.info("Indexing datasets in Qdrant...")
+    logger.info(f"Indexing {len(datasets)} datasets in Qdrant (batch size: {batch_size})...")
     try:
         vector_store = QdrantVectorStoreManager()
         vector_store.initialize()
-        vector_store.add_datasets(datasets)
+        
+        total_datasets = len(datasets)
+        for i in range(0, total_datasets, batch_size):
+            batch = datasets[i:i + batch_size]
+            batch_num = (i // batch_size) + 1
+            total_batches = (total_datasets + batch_size - 1) // batch_size
+            
+            vector_store.add_datasets(batch)
+            logger.info(f"Batch {batch_num}/{total_batches}: Added {len(batch)} datasets ({i + len(batch)}/{total_datasets} total)")
+            
         logger.info(f"Added {len(datasets)} datasets to Qdrant")
         return True
     except Exception as e:
         logger.error(f"Error indexing in Qdrant: {e}")
         return False
 
-def index_datasets(datasets: List[Dataset]) -> bool:
+def index_datasets(datasets: List[Dataset], batch_size: int = QDRANT_BATCH_SIZE) -> bool:
     """Index the datasets in both the vector database and spatial index"""
     return (
         index_datasets_in_postgis(datasets) and 
-        index_datasets_in_qdrant(datasets)
+        index_datasets_in_qdrant(datasets, batch_size=batch_size)
     )
     
 def harvest_and_index_datasets(catalogue_id: str = CATALOGUE_ID,

@@ -3,9 +3,9 @@ from typing import List, Optional, Dict, Any
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient, models
 from langchain.schema import Document
-from langchain_openai import OpenAIEmbeddings
 from dotenv import load_dotenv
 from models.dataset import Dataset
+from config.embeddings_config import EmbeddingsConfig
 
 
 class QdrantVectorStoreManager:
@@ -18,7 +18,7 @@ class QdrantVectorStoreManager:
         self.collection_name = os.getenv("COLLECTION_NAME")
         self.client = None
         self.vector_store = None
-        self.embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+        self.embeddings = EmbeddingsConfig.create_embeddings()
 
     def initialize(self) -> None:
         """
