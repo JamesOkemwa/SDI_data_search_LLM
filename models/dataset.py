@@ -40,12 +40,15 @@ class Dataset:
         """
 
         content_parts = []
-        if self.titles:
-            content_parts.append(f"Title: {'; '.join(self.titles)}")
-        if self.descriptions:
-            content_parts.append(f"Description: {'; '.join(self.descriptions)}")
-        if self.keywords:
-            content_parts.append(f"Keywords: {', '.join(self.keywords)}")
+        titles = [t for t in self.titles if t]
+        descriptions = [d for d in self.descriptions if d]
+        keywords = [k for k in self.keywords if k]
+        if titles:
+            content_parts.append(f"Title: {'; '.join(titles)}")
+        if descriptions:
+            content_parts.append(f"Description: {'; '.join(descriptions)}")
+        if keywords:
+            content_parts.append(f"Keywords: {', '.join(keywords)}")
 
         return "\n".join(content_parts)
 
