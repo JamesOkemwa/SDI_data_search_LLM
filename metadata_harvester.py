@@ -7,6 +7,7 @@ from typing import List
 from connectors.base_connector import BaseMetadataConnector
 from connectors.csw_connector import CSWConnector
 from connectors.edp_connector import EDPConnector
+from connectors.ogc_records_connector import OGCRecordsConnector
 from connectors.rdf_file_connector import RDFFileConnector
 from models.dataset import Dataset
 from pg_database.postgis_db import PostGISService
@@ -22,6 +23,12 @@ EDP_LIMIT = 100
 
 # CSW_URL = "https://metawal.wallonie.be/geonetwork/srv/eng/csw"
 CSW_URL = "https://atlas.thuenen.de/catalogue/csw"
+
+OGC_RECORDS_URL = "https://wis2-gdc.weather.gc.ca"
+OGC_RECORDS_COLLECTION_ID = "wis2-discovery-metadata"
+
+# OGC_RECORDS_URL = 'https://api.woudc.org/'
+OGC_RECORDS_VERIFY_SSL = False
 
 QDRANT_BATCH_SIZE = 500
 
@@ -128,6 +135,11 @@ if __name__ == "__main__":
         ),
         CSWConnector(
             url=CSW_URL
+        ),
+        OGCRecordsConnector(
+            base_url=OGC_RECORDS_URL,
+            verify_ssl=OGC_RECORDS_VERIFY_SSL,
+            collection_id=OGC_RECORDS_COLLECTION_ID,
         ),
     ]
 
