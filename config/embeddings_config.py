@@ -1,5 +1,6 @@
 import os
-from typing import Literal, List
+from typing import Literal, List, Optional
+import torch
 from langchain_openai import OpenAIEmbeddings
 from langchain.embeddings.base import Embeddings
 from sentence_transformers import SentenceTransformer
@@ -9,12 +10,24 @@ load_dotenv()
 
 EmbeddingProvider = Literal["local", "openai", "sentence_transformers"]
 
+def _resolve_device() -> str:
+    """Resolve the compute device, honoring an optional env override"""
+    override = os.getenv("SENTENCE_TRANSFORMERS_DEVICE")
+    if override:
+        return override
+    if torch.cuda.is_available():
+        return "cuda"
+    if torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
+
 class SentenceTransformersEmbedding(Embeddings):
     """Custom embedding class wrapping SentenceTransformers models"""
-    
-    def __init__(self, model_name: str = None):
+
+    def __init__(self, model_name: Optional[str] = None, device: Optional[str] = None):
         self.model_name = model_name or os.getenv("SENTENCE_TRANSFORMERS_MODEL", "BAAI/bge-m3")
-        self.model = SentenceTransformer(self.model_name)
+        self.device = device or _resolve_device()
+        self.model = SentenceTransformer(self.model_name, device=self.device)
         
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         """Embed search documents using SentenceTransformers"""
